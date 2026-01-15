@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'products')));
 app.post('/api/chatbot/message', chatbotController.sendMessage);
 
 // Other API routes
-app.use('/accounts', require('./accounts/account.controller'));
+app.use('/api/accounts', require('./accounts/account.controller'));
 app.use('/api-docs', require('./_helpers/swagger'));
 
 // ============================================
