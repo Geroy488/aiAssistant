@@ -20,6 +20,9 @@
     db.RefreshToken = require('../accounts/refresh-token.model')(sequelize);
     db.Preferences = require('../models/preferences.model')(sequelize);
     db.ActivityLog = require('../models/activitylog.model')(sequelize);
+    db.User = require('../users/user.model')(sequelize);
+    db.Task = require('../tasks/tasks.model')(sequelize);
+    db.TaskAiTag = require('../task_ai_tags/task_ai_tags.model')(sequelize);
 
     db.Account.hasMany(db.RefreshToken, { foreignKey: 'AccountId', onDelete: 'CASCADE' });
     db.RefreshToken.belongsTo(db.Account, { foreignKey: 'AccountId' });

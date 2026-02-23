@@ -41,6 +41,7 @@ app.post('/api/chatbot/message', chatbotController.sendMessage);
 // Other API routes
 app.use('/api/accounts', require('./accounts/account.controller'));
 app.use('/api-docs', require('./_helpers/swagger'));
+app.use('/api/tasks', require('./tasks/tasks.controller'));
 
 // ============================================
 // ERROR HANDLER (MUST BE LAST)
