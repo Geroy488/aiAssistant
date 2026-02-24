@@ -24,6 +24,10 @@
     db.Task = require('../tasks/tasks.model')(sequelize);
     db.TaskAiTag = require('../task_ai_tags/task_ai_tags.model')(sequelize);
 
+    // Add this relationship
+    db.Task.hasOne(db.TaskAiTag, { foreignKey: 'taskId', onDelete: 'CASCADE' });
+    db.TaskAiTag.belongsTo(db.Task, { foreignKey: 'taskId' });
+
     db.Account.hasMany(db.RefreshToken, { foreignKey: 'AccountId', onDelete: 'CASCADE' });
     db.RefreshToken.belongsTo(db.Account, { foreignKey: 'AccountId' });
 

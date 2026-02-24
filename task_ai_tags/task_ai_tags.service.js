@@ -1,22 +1,22 @@
+require('dotenv').config(); // ← add this as the FIRST line
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 async function classifyPriority(description) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const prompt = `
-    You are a strict classifier.
+            You are a strict classifier. Respond with ONLY a JSON object, nothing else.
 
-    Respond with ONLY one word:
-    Low
-    Medium
-    High
+            Example response:
+            {"priority": "High", "deadline": "2026-03-01"}
 
-    No explanation.
-    No punctuation.
-    No extra text.
+            If no deadline is mentioned, use null for deadline.
+            Priority must be exactly one of: Low, Medium, High
 
-    Task:
-    "${description}"
-        `;
+            Task: "${description}"
+                    `;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -24,9 +24,14 @@ async function classifyPriority(description) {
 
         console.log("Gemini raw response:", text);
 
+        // Remove markdown code blocks if Gemini wraps it in ```json ... ```
+        const cleaned = text.replace(/```json|```/g, "").trim();
+
+        const parsed = JSON.parse(cleaned);  // ← parse the JSON Gemini returns
+
         return {
-            priority: extractPriority(text),
-            deadline: null,
+            priority: extractPriority(parsed.priority),
+            deadline: parsed.deadline ?? null,  // ← now actually extracted
             raw: text
         };
 
