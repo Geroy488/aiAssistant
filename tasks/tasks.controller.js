@@ -17,7 +17,7 @@ function create(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    taskService.getAll(req.user.AccountId)
+    taskService.getAll(req.user.AccountId, req.user.role)  // ✅ pass role
         .then(tasks => res.json(tasks))
         .catch(next);
 }

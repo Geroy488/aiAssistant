@@ -45,7 +45,11 @@ async function create(userId, params) {
     return task;
 }
 
-async function getAll(userId) {
+async function getAll(userId, role) {
+    // Admin sees all tasks, regular users see only their own
+    if (role === 'Admin') {
+        return await db.Task.findAll();
+    }
     return await db.Task.findAll({ where: { userId } });
 }
 
