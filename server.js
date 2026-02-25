@@ -42,6 +42,7 @@ app.post('/api/chatbot/message', chatbotController.sendMessage);
 app.use('/api/accounts', require('./accounts/account.controller'));
 app.use('/api-docs', require('./_helpers/swagger'));
 app.use('/api/tasks', require('./tasks/tasks.controller'));
+app.use('/api/task-ai-tags', require('./task_ai_tags/task_ai_tags.controller')); // ✅ Add this
 
 // ============================================
 // ERROR HANDLER (MUST BE LAST)

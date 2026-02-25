@@ -4,19 +4,32 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function classifyPriority(description) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        const prompt = `
-            You are a strict classifier. Respond with ONLY a JSON object, nothing else.
+const today = new Date().toISOString().split('T')[0]; // gets today's date e.g. "2026-02-25"
 
-            Example response:
-            {"priority": "High", "deadline": "2026-03-01"}
+const prompt = `
+    You are a strict task priority classifier. Respond with ONLY a JSON object, nothing else.
+    No markdown, no explanation, no code blocks.
 
-            If no deadline is mentioned, use null for deadline.
-            Priority must be exactly one of: Low, Medium, High
+    Today's date is ${today}.
 
-            Task: "${description}"
-                    `;
+    Rules:
+    - Priority must be exactly one of: Low, Medium, High
+    - Low = casual, no urgency, no deadline pressure
+    - Medium = somewhat important, has a rough timeframe
+    - High = urgent, critical, or has a near deadline
+
+    Deadline rules:
+    - If a specific date is mentioned, use it in YYYY-MM-DD format
+    - If relative time is mentioned (e.g. "this month", "next week"), calculate from today's date
+    - If no deadline is mentioned, use null
+
+    Example response:
+    {"priority": "Low", "deadline": null}
+
+    Task: "${description}"
+`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
